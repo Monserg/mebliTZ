@@ -180,6 +180,23 @@
   </div>
 </footer>
 
+<!-- Перегляд фото з галереї на повний екран (main.js: openLightbox) -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Перегляд фото" hidden>
+  <button class="lightbox__close" id="lightbox-close" type="button" aria-label="Закрити">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+  </button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" type="button" aria-label="Попереднє фото">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+  </button>
+  <figure class="lightbox__fig">
+    <img id="lightbox-img" alt="">
+    <figcaption id="lightbox-cap"></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" type="button" aria-label="Наступне фото">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+  </button>
+</div>
+
 <nav class="bar" aria-label="Швидкий зв'язок">
   <a class="btn btn--main" href="tel:+380000000000">Подзвонити</a>
   <a class="btn btn--line" href="https://t.me/USERNAME" target="_blank" rel="noopener">Telegram</a>

@@ -112,12 +112,82 @@ document.getElementById("calc-add").addEventListener("click", () => {
   setTimeout(() => form.name.focus({ preventScroll: true }), 400);
 });
 
+// Галерея: фото з підписами; порожні місця — заглушки. Тап по фото відкриває його на повний екран.
+const shots = []; // [{image, caption}] лише реальні фото, у порядку галереї
+
 function renderPhotos(data) {
   if (!data) return;
-  document.getElementById("gallery").innerHTML = (data.gallery || []).map((p) => p.image
-    ? `<figure class="shot"><img src="${esc(p.image)}" alt="${esc(p.caption || "Наша робота")}" loading="lazy">${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ""}</figure>`
-    : `<div class="ph">${esc(p.caption || "Фото роботи")}</div>`).join("");
+  shots.length = 0;
+  document.getElementById("gallery").innerHTML = (data.gallery || []).map((p) => {
+    if (!p.image) return `<div class="ph">${esc(p.caption || "Фото роботи")}</div>`;
+    const i = shots.push({ image: p.image, caption: p.caption || "" }) - 1;
+    return `<figure class="shot">
+      <button type="button" class="shot__btn" data-shot="${i}" aria-label="Відкрити фото: ${esc(p.caption || "Наша робота")}">
+        <img src="${esc(p.image)}" alt="${esc(p.caption || "Наша робота")}" loading="lazy">
+      </button>${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ""}</figure>`;
+  }).join("");
 }
+
+// ---------- Перегляд фото на повний екран ----------
+const lb = {
+  box: document.getElementById("lightbox"),
+  img: document.getElementById("lightbox-img"),
+  cap: document.getElementById("lightbox-cap"),
+  prev: document.getElementById("lightbox-prev"),
+  next: document.getElementById("lightbox-next"),
+  close: document.getElementById("lightbox-close"),
+  index: 0,
+  opener: null,
+};
+
+function showShot(i) {
+  lb.index = (i + shots.length) % shots.length;
+  const s = shots[lb.index];
+  lb.img.src = s.image;
+  lb.img.alt = s.caption || "Наша робота";
+  lb.cap.textContent = shots.length > 1 ? `${s.caption ? s.caption + " · " : ""}${lb.index + 1} з ${shots.length}` : s.caption;
+  lb.prev.hidden = lb.next.hidden = shots.length < 2;
+}
+
+function openLightbox(i, opener) {
+  lb.opener = opener || null;
+  showShot(i);
+  lb.box.hidden = false;
+  document.body.classList.add("lightbox-open");
+  lb.close.focus();
+}
+
+function closeLightbox() {
+  if (lb.box.hidden) return;
+  lb.box.hidden = true;
+  lb.img.src = "";
+  document.body.classList.remove("lightbox-open");
+  if (lb.opener) lb.opener.focus();
+}
+
+document.getElementById("gallery").addEventListener("click", (e) => {
+  const btn = e.target.closest(".shot__btn");
+  if (btn) openLightbox(Number(btn.dataset.shot), btn);
+});
+lb.close.addEventListener("click", closeLightbox);
+lb.prev.addEventListener("click", () => showShot(lb.index - 1));
+lb.next.addEventListener("click", () => showShot(lb.index + 1));
+lb.box.addEventListener("click", (e) => { if (e.target === lb.box) closeLightbox(); }); // клік по фону
+document.addEventListener("keydown", (e) => {
+  if (lb.box.hidden) return;
+  if (e.key === "Escape") closeLightbox();
+  else if (e.key === "ArrowLeft") showShot(lb.index - 1);
+  else if (e.key === "ArrowRight") showShot(lb.index + 1);
+});
+// Свайп на телефоні: вліво — наступне, вправо — попереднє
+let touchX = null;
+lb.box.addEventListener("touchstart", (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+lb.box.addEventListener("touchend", (e) => {
+  if (touchX == null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  touchX = null;
+  if (Math.abs(dx) > 50 && shots.length > 1) showShot(lb.index + (dx < 0 ? 1 : -1));
+});
 
 loadContent().then(({ prices, photos }) => {
   renderPrices(prices);
