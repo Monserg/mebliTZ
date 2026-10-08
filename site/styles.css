@@ -1,0 +1,209 @@
+/* Дизайн: «Теплий майстер», структура «Ціни-перший» + калькулятор (docs/03-design.md) */
+:root {
+  --bg: #fdf6ea;
+  --tint: #faeeda;
+  --card: #fffaf2;
+  --line: #f0d6a8;
+  --ph: #fac775;
+  --ph-text: #633806;
+  --accent: #854f0b;
+  --accent-hover: #633806;
+  --on-accent: #ffffff;
+  --line-btn: #633806;
+  --strong: #633806;
+  --text: #412402;
+  --muted: #7a5523;
+  --head-bg: #633806;
+  --head-text: #faeeda;
+  --head-line: transparent;
+  --mark-bg: #fac775;
+  --mark-text: #633806;
+  --foot-bg: #633806;
+  --foot-text: #faeeda;
+  --input-bg: #ffffff;
+  --ok: #3b6d11;
+  --bad: #a32d2d;
+  --radius: 14px;
+}
+
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 17px/1.6 "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  padding-bottom: 76px;
+}
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: clamp(28px, 6vw, 46px); font-weight: 800; max-width: 20ch; }
+h2 { font-size: clamp(24px, 4.5vw, 32px); font-weight: 800; }
+h3 { font-size: 19px; font-weight: 700; }
+p { margin: 0 0 1em; }
+a { color: var(--accent); }
+svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+.draft { background: #e24b4a; color: #fff; text-align: center; font-size: 14px; padding: 6px 16px; }
+
+.top { background: var(--head-bg); color: var(--head-text); border-bottom: 1px solid var(--head-line); position: sticky; top: 0; z-index: 10; }
+.top__in { display: flex; align-items: center; justify-content: space-between; min-height: 60px; gap: 12px; }
+.logo { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-weight: 800; font-size: 17px; line-height: 1.1; }
+.logo > span { white-space: nowrap; }
+.logo small { display: block; font-weight: 500; font-size: 13px; opacity: .8; }
+.logo__mark { width: 36px; height: 36px; border-radius: 10px; background: var(--mark-bg); color: var(--mark-text); display: grid; place-items: center; }
+/* Меню розділів. На телефоні — бокова панель зліва (menu.js), на комп'ютері — рядок у шапці. */
+.menu {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 31; width: min(80vw, 320px); /* над нижньою панеллю .bar (20) */
+  display: grid; align-content: start; gap: 4px; padding: 72px 24px 24px;
+  background: var(--head-bg); color: var(--head-text); font-weight: 700; font-size: 19px;
+  box-shadow: 8px 0 32px rgba(65, 36, 2, .35);
+  transform: translateX(-105%); transition: transform .25s ease; visibility: hidden;
+}
+body.menu-open .menu { transform: none; visibility: visible; }
+.menu a { color: inherit; text-decoration: none; padding: 12px 0; border-bottom: 1px solid rgba(250, 238, 218, .18); }
+.menu a:hover { text-decoration: underline; }
+.menu__close { position: absolute; top: 10px; right: 16px; width: 40px; height: 40px; border: 0; border-radius: 10px; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
+.menu__close:hover, .menu-btn:hover { background: rgba(250, 238, 218, .12); }
+.menu__close svg, .menu-btn svg { width: 24px; height: 24px; }
+.menu-btn { order: -1; flex: none; width: 40px; height: 40px; margin: 0 -6px 0 -8px; border: 0; border-radius: 10px; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
+.menu__veil { position: fixed; inset: 0; z-index: 30; background: rgba(65, 36, 2, .45); opacity: 0; visibility: hidden; transition: opacity .25s; }
+body.menu-open .menu__veil { opacity: 1; visibility: visible; }
+@media (prefers-reduced-motion: reduce) { .menu, .menu__veil { transition: none; } }
+/* Телефон у шапці. На телефоні: іконка зліва, номер та ім'я майстра у два рядки; на комп'ютері — в один рядок. */
+.top__phone { flex: none; display: grid; grid-template-columns: auto auto; column-gap: 6px; align-items: center; color: inherit; font-weight: 700; font-size: 15px; line-height: 1.15; text-decoration: none; white-space: nowrap; }
+.top__phone svg { grid-row: 1 / 3; width: 18px; height: 18px; }
+.top__name { grid-column: 2; font-weight: 500; font-size: 13px; opacity: .85; }
+/* На вузьких телефонах (до 480 px) у шапці не вміщаються логотип з підписом, телефон і кнопка меню: підпис ховаємо */
+@media (max-width: 479px) { .top__in { gap: 8px; } .logo small { display: none; } }
+
+.hero { background: var(--tint); padding: 40px 0 48px; }
+.hero__row { display: flex; flex-wrap: wrap; gap: 22px 48px; align-items: flex-end; }
+.eyebrow { color: var(--accent); font-weight: 700; font-size: 15px; margin-bottom: .6em; }
+.lead { flex: 1 1 320px; font-size: 18px; color: var(--muted); margin: 0; max-width: 56ch; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.ph {
+  background: var(--ph); border-radius: var(--radius); color: var(--ph-text);
+  display: grid; place-items: center; text-align: center; padding: 16px; font-weight: 500;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 22px; border-radius: var(--radius); font: inherit; font-weight: 700;
+  text-decoration: none; cursor: pointer; border: 2px solid var(--accent);
+}
+.btn--main { background: var(--accent); color: var(--on-accent); }
+.btn--main:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn--line { background: transparent; color: var(--line-btn); }
+.btn--line:hover { background: var(--card); }
+
+.sec { padding: 56px 0; }
+.sec--tint { background: var(--tint); }
+.sec__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px 32px; }
+.sec__head h2, .sec__head .sub { margin: 0; }
+.sub { color: var(--muted); max-width: 640px; }
+
+.cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 24px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+.card p { color: var(--muted); margin: 0; font-size: 16px; }
+.card__ico { width: 44px; height: 44px; border-radius: 12px; background: var(--ph); color: var(--accent); display: grid; place-items: center; margin-bottom: 12px; }
+
+/* Прайс: усі групи розгорнуті, у сітці карток; біля кожної позиції кнопки калькулятора «−/+» */
+.price { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 24px; align-items: start; }
+.price__group { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px 10px; }
+.price__group h3 { margin-bottom: 6px; }
+.price ul { list-style: none; margin: 0; padding: 0; }
+.price li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px dashed var(--line); font-size: 16px; }
+.price li > span:first-child { flex: 1; }
+/* Довгі ціни («150 – 250 грн / комплект») переносяться, щоб кнопки «−/+» не вилазили за картку */
+.price b { color: var(--strong); text-align: right; flex: 0 1 auto; max-width: 46%; }
+.qty { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.qty button {
+  width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--input-bg);
+  color: var(--accent); font: inherit; font-size: 20px; font-weight: 800; line-height: 1; cursor: pointer;
+}
+.qty button:hover { border-color: var(--accent); }
+.qty button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.qty button[data-d="-1"] { visibility: hidden; }
+.qty output { min-width: 0; width: 0; overflow: hidden; text-align: center; font-weight: 800; color: var(--strong); }
+.price li.on { background: var(--tint); margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
+.price li.on .qty button[data-d="-1"] { visibility: visible; }
+.price li.on .qty output { width: 26px; }
+
+/* Підсумок калькулятора: липка панель над нижньою панеллю на телефоні */
+.calc {
+  position: sticky; bottom: 84px; z-index: 5; margin-top: 16px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--head-bg); color: var(--head-text); border-radius: var(--radius); padding: 14px 18px;
+  box-shadow: 0 6px 24px rgba(65, 36, 2, .25);
+}
+.calc[hidden] { display: none; }
+.calc__sum { display: grid; line-height: 1.3; }
+.calc__sum span { font-size: 14px; opacity: .85; }
+.calc__sum b { font-size: 22px; font-weight: 800; }
+.calc__sum small { font-size: 13px; opacity: .8; }
+.calc__act { display: flex; gap: 8px; flex-wrap: wrap; }
+.calc .btn { padding: 10px 16px; }
+.calc .btn--main { background: var(--mark-bg); border-color: var(--mark-bg); color: var(--mark-text); }
+.calc .btn--main:hover { background: var(--card); border-color: var(--card); }
+.calc .btn--line { color: var(--head-text); border-color: rgba(250, 238, 218, .5); }
+.calc .btn--line:hover { background: rgba(250, 238, 218, .1); }
+
+.gallery { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); margin-top: 24px; }
+.gallery .ph { aspect-ratio: 1; }
+.gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); display: block; }
+.shot { margin: 0; }
+.shot figcaption { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+
+.form-wrap { display: grid; gap: 28px; }
+.contacts { display: grid; gap: 8px; font-weight: 700; font-size: 18px; }
+.form { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: grid; gap: 14px; }
+.form label { display: grid; gap: 6px; font-weight: 500; font-size: 15px; }
+.form input, .form textarea {
+  font: inherit; color: var(--text); background: var(--input-bg); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px 14px; width: 100%;
+}
+.form input::placeholder, .form textarea::placeholder { color: var(--muted); opacity: .8; }
+.form input:focus, .form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.form .bad { border-color: var(--bad); box-shadow: 0 0 0 1px var(--bad); }
+.form .btn { width: 100%; }
+.hp { position: absolute; left: -9999px; }
+.err { display: none; color: var(--bad); font-size: 14px; }
+.err.show { display: block; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.status { margin: 0; font-weight: 700; }
+.status.ok { color: var(--ok); }
+.status.fail { color: var(--bad); }
+
+.foot { background: var(--foot-bg); color: var(--foot-text); padding: 28px 0; font-size: 15px; }
+.foot p { margin: 0 0 4px; }
+.foot a { color: inherit; }
+.foot__in { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.foot__admin { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; opacity: .55; transition: opacity .15s, background .15s; }
+.foot__admin:hover, .foot__admin:focus-visible { opacity: 1; background: rgba(255,255,255,.1); }
+
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: var(--card); border-top: 1px solid var(--line);
+}
+.bar .btn { padding: 12px; }
+
+@media (min-width: 800px) {
+  body { padding-bottom: 0; }
+  .calc { bottom: 16px; }
+  .bar { display: none; }
+  .menu { position: static; width: auto; display: flex; gap: 18px; padding: 0; background: none; box-shadow: none; transform: none; visibility: visible; font-weight: 500; font-size: 15px; }
+  .menu a { padding: 0; border: 0; white-space: nowrap; }
+  .menu .menu__more { display: none; } /* «План сайту» є в підвалі */
+  .menu__close, .menu-btn, .menu__veil { display: none; }
+  .top__phone { display: flex; font-size: inherit; }
+  .top__name { font-size: inherit; }
+  .top__name::before { content: "· "; }
+  .hero { padding: 72px 0; }
+  .form-wrap { grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: start; }
+}

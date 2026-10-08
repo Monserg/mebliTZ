@@ -1,0 +1,12 @@
+{
+  "name": "vacancy-tz-zbirka-mebliv",
+  "private": true,
+  "scripts": {
+    "dev": "WRANGLER_SEND_METRICS=false wrangler pages dev --port 8788 --ip 127.0.0.1",
+    "deploy": "wrangler pages deploy --branch main --commit-dirty=true",
+    "secret": "wrangler pages secret put"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}
