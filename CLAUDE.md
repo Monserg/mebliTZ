@@ -20,7 +20,7 @@
 - Калькулятор у `site/main.js` рахує з того ж прайсу, що й адмінка.
 - Географія в текстах — «Хмельницький та район».
 - Контакти умовні: телефон `000 000 00 00`, ім'я майстра «Сергій»,
-  Telegram-нік заглушка `USERNAME` (усе в `site/index.html`).
+  Telegram-нік користувача `@SerhiiM_UA` (усе в `site/index.html`).
 - Cloudflare Pages + Pages Functions (`functions/`) + KV (`CONTENT`),
   проєкт `vacancy-tz-zbirka-mebliv`. Репозиторій: github.com/Monserg/mebliTZ.
 - Локально: `npm run dev` → http://localhost:8788 (тестовий логін/пароль у `.dev.vars`).

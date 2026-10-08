@@ -21,7 +21,7 @@
       рахується як «від 400»
 - [x] Обов'язкові поля форми Ім'я / Телефон / Що зробити (браузер + сервер)
 - [x] Знеособлено заново: телефон `000 000 00 00`, ім'я майстра «Сергій»,
-      назва без бренду клієнта, Telegram-нік заглушка `USERNAME`
+      назва без бренду клієнта, Telegram-нік `@SerhiiM_UA`
 - [x] Telegram під власного бота: `docs/04-telegram-leads.md`, `scripts/tg-check.sh`,
       `npm run secret`, місця для токена в `.dev.vars`
 - [x] План сайту: `PLAN.md` + сторінка `/plan`, посилання в підвалі
@@ -56,8 +56,7 @@
 
 ## Потрібно від користувача
 
-- [ ] **Telegram-нік** для кнопки «Написати у Telegram»: замінити `USERNAME`
-      у двох посиланнях `site/index.html`
+- [x] **Telegram-нік** `@SerhiiM_UA` вписано в кнопку «Написати у Telegram» (2026-10-08)
 - [ ] **Бот для заявок:** @BotFather → `/newbot` → Start у боті →
       `TG_BOT_TOKEN=… sh scripts/tg-check.sh` дає chat_id
       ([docs/04-telegram-leads.md](docs/04-telegram-leads.md))

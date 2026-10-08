@@ -62,5 +62,10 @@ export async function onRequestPost({ request, env }) {
   } else {
     res = await sendMessage();
   }
-  return res.ok ? json({ ok: true }) : json({ error: "Не вдалося надіслати в Telegram" }, 502);
+  if (res.ok) return json({ ok: true });
+  // Короткий опис відмови Telegram («chat not found», «Unauthorized») — у полі detail, щоб
+  // власник міг знайти причину через curl; токена там немає. Сайт показує лише загальний текст.
+  const detail = await res.json().then((b) => b.description).catch(() => "");
+  console.error(`Telegram ${res.status}: ${detail || "без опису"}`);
+  return json({ error: "Не вдалося надіслати в Telegram", detail: `${res.status} ${detail}`.trim() }, 502);
 }
