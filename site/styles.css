@@ -48,15 +48,17 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 
 .draft { background: #e24b4a; color: #fff; text-align: center; font-size: 14px; padding: 6px 16px; }
 
-.top { background: var(--head-bg); color: var(--head-text); border-bottom: 1px solid var(--head-line); position: sticky; top: 0; z-index: 10; }
+/* z-index 30: шапка створює контекст накладання для бокового меню, яке має бути над нижньою панеллю .bar (20) */
+.top { background: var(--head-bg); color: var(--head-text); border-bottom: 1px solid var(--head-line); position: sticky; top: 0; z-index: 30; }
 .top__in { display: flex; align-items: center; justify-content: space-between; min-height: 60px; gap: 12px; }
 .logo { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-weight: 800; font-size: 17px; line-height: 1.1; }
 .logo > span { white-space: nowrap; }
 .logo small { display: block; font-weight: 500; font-size: 13px; opacity: .8; }
 .logo__mark { width: 36px; height: 36px; border-radius: 10px; background: var(--mark-bg); color: var(--mark-text); display: grid; place-items: center; }
-/* Меню розділів. На телефоні — бокова панель зліва (menu.js), на комп'ютері — рядок у шапці. */
+/* Меню розділів. На телефоні — бокова панель зліва, відкривається тапом по логотипу, де замість молотка
+   іконка ☰ (menu.js); на комп'ютері — рядок у шапці, логотип — звичайне посилання з молотком. */
 .menu {
-  position: fixed; top: 0; left: 0; bottom: 0; z-index: 31; width: min(80vw, 320px); /* над нижньою панеллю .bar (20) */
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 2; width: min(80vw, 320px);
   display: grid; align-content: start; gap: 4px; padding: 72px 24px 24px;
   background: var(--head-bg); color: var(--head-text); font-weight: 700; font-size: 19px;
   box-shadow: 8px 0 32px rgba(65, 36, 2, .35);
@@ -66,17 +68,17 @@ body.menu-open .menu { transform: none; visibility: visible; }
 .menu a { color: inherit; text-decoration: none; padding: 12px 0; border-bottom: 1px solid rgba(250, 238, 218, .18); }
 .menu a:hover { text-decoration: underline; }
 .menu__close { position: absolute; top: 10px; right: 16px; width: 40px; height: 40px; border: 0; border-radius: 10px; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
-.menu__close:hover, .menu-btn:hover { background: rgba(250, 238, 218, .12); }
-.menu__close svg, .menu-btn svg { width: 24px; height: 24px; }
-.menu-btn { order: -1; flex: none; width: 40px; height: 40px; margin: 0 -6px 0 -8px; border: 0; border-radius: 10px; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
-.menu__veil { position: fixed; inset: 0; z-index: 30; background: rgba(65, 36, 2, .45); opacity: 0; visibility: hidden; transition: opacity .25s; }
+.menu__close:hover { background: rgba(250, 238, 218, .12); }
+.menu__close svg { width: 24px; height: 24px; }
+.logo__mark .ico-hammer { display: none; }
+.menu__veil { position: fixed; inset: 0; z-index: 1; background: rgba(65, 36, 2, .45); opacity: 0; visibility: hidden; transition: opacity .25s; }
 body.menu-open .menu__veil { opacity: 1; visibility: visible; }
 @media (prefers-reduced-motion: reduce) { .menu, .menu__veil { transition: none; } }
 /* Телефон у шапці. На телефоні: іконка зліва, номер та ім'я майстра у два рядки; на комп'ютері — в один рядок. */
 .top__phone { flex: none; display: grid; grid-template-columns: auto auto; column-gap: 6px; align-items: center; color: inherit; font-weight: 700; font-size: 15px; line-height: 1.15; text-decoration: none; white-space: nowrap; }
 .top__phone svg { grid-row: 1 / 3; width: 18px; height: 18px; }
 .top__name { grid-column: 2; font-weight: 500; font-size: 13px; opacity: .85; }
-/* На вузьких телефонах (до 480 px) у шапці не вміщаються логотип з підписом, телефон і кнопка меню: підпис ховаємо */
+/* На вузьких телефонах (до 480 px) у шапці не вміщаються логотип з підписом і телефон з ім'ям: підпис ховаємо */
 @media (max-width: 479px) { .top__in { gap: 8px; } .logo small { display: none; } }
 
 .hero { background: var(--tint); padding: 40px 0 48px; }
@@ -200,7 +202,8 @@ body.menu-open .menu__veil { opacity: 1; visibility: visible; }
   .menu { position: static; width: auto; display: flex; gap: 18px; padding: 0; background: none; box-shadow: none; transform: none; visibility: visible; font-weight: 500; font-size: 15px; }
   .menu a { padding: 0; border: 0; white-space: nowrap; }
   .menu .menu__more { display: none; } /* «План сайту» є в підвалі */
-  .menu__close, .menu-btn, .menu__veil { display: none; }
+  .menu__close, .menu__veil, .logo__mark .ico-burger { display: none; }
+  .logo__mark .ico-hammer { display: block; }
   .top__phone { display: flex; font-size: inherit; }
   .top__name { font-size: inherit; }
   .top__name::before { content: "· "; }
