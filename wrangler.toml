@@ -4,10 +4,10 @@ pages_build_output_dir = "site"
 compatibility_date = "2026-10-01"
 
 # Єдине сховище: прайс, фото (ключі photo:*), пароль і сесії адмінки.
-# id замінити на справжній після створення: npx wrangler kv namespace create CONTENT
+# Сховище «CONTENT» в акаунті розробника (було порожнє, підключено 2026-10-08).
 [[kv_namespaces]]
 binding = "CONTENT"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "175180826ce94758968cd6eb8d6836d6"
 
 # Секрети (НЕ записувати сюди), задаються в панелі Cloudflare або командою
 #   npx wrangler pages secret put <НАЗВА>

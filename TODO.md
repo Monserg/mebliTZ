@@ -61,9 +61,10 @@
 - [ ] **Бот для заявок:** @BotFather → `/newbot` → Start у боті →
       `TG_BOT_TOKEN=… sh scripts/tg-check.sh` дає chat_id
       ([docs/04-telegram-leads.md](docs/04-telegram-leads.md))
-- [ ] **Cloudflare:** `npx wrangler login` → KV `CONTENT` (id у `wrangler.toml`) →
-      проєкт `vacancy-tz-zbirka-mebliv` → `npm run deploy` → секрети
-      `ADMIN_LOGIN`, `ADMIN_PASSWORD`, `TG_BOT_TOKEN`, `TG_CHAT_ID` → `npm run deploy`
+- [x] **Cloudflare:** `wrangler login`, KV `CONTENT`, проєкт `vacancy-tz-zbirka-mebliv`,
+      опубліковано https://vacancy-tz-zbirka-mebliv.pages.dev (2026-10-08)
+- [ ] **Секрети** `ADMIN_LOGIN`, `ADMIN_PASSWORD`, `TG_BOT_TOKEN`, `TG_CHAT_ID`
+      (`npm run secret -- НАЗВА`, вводить користувач) → `npm run deploy`
       ([docs/08-technical.md](docs/08-technical.md))
 - [ ] Перевірити на живому сайті: калькулятор → заявка → прийшла в Telegram;
       вхід в адмінку, зміна ціни відображається в калькуляторі
