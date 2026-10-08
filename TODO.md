@@ -58,7 +58,7 @@
 
 - [x] **Telegram-нік** `@SerhiiM_UA` вписано в кнопку «Написати у Telegram» (2026-10-08)
 - [ ] **Бот для заявок:** @BotFather → `/newbot` → Start у боті →
-      `TG_BOT_TOKEN=… sh scripts/tg-check.sh` дає chat_id
+      `sh scripts/tg-check.sh` дає chat_id
       ([docs/04-telegram-leads.md](docs/04-telegram-leads.md))
 - [x] **Cloudflare:** `wrangler login`, KV `CONTENT`, проєкт `vacancy-tz-zbirka-mebliv`,
       опубліковано https://vacancy-tz-zbirka-mebliv.pages.dev (2026-10-08)

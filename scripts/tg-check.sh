@@ -1,10 +1,14 @@
 #!/bin/sh
 # Перевірка Telegram-бота для заявок (docs/04-telegram-leads.md).
-#   TG_BOT_TOKEN=123:abc sh scripts/tg-check.sh                 → покаже chat_id усіх, хто писав боту
-#   TG_BOT_TOKEN=123:abc TG_CHAT_ID=42 sh scripts/tg-check.sh   → ще й надішле тестове повідомлення
+#   sh scripts/tg-check.sh   → спитає токен і покаже chat_id усіх, хто писав боту; за бажанням надішле тест
 # Токен передається лише змінною середовища, у файли і в чат з Claude не вставляти.
+# Можна і без змінних: просто `sh scripts/tg-check.sh` — скрипт попросить вставити токен (ввід невидимий).
 set -e
-[ -n "$TG_BOT_TOKEN" ] || { echo "Задайте TG_BOT_TOKEN (токен від @BotFather)"; exit 1; }
+case "$TG_BOT_TOKEN" in ""|ВАШ_ТОКЕН|YOUR_TOKEN)
+  printf "Вставте токен бота від @BotFather (вигляд 1234567890:AAE...), Enter: "
+  stty -echo 2>/dev/null || true; read -r TG_BOT_TOKEN; stty echo 2>/dev/null || true; echo ;;
+esac
+case "$TG_BOT_TOKEN" in *:*) ;; *) echo "Це не схоже на токен (має містити двокрапку)"; exit 1 ;; esac
 API="https://api.telegram.org/bot$TG_BOT_TOKEN"
 
 echo "Бот:"
@@ -23,6 +27,9 @@ for cid, name in seen.items(): print("  chat_id=%s  %s" % (cid, name))
 if not seen: print("  (порожньо)")
 '
 
+if [ -z "$TG_CHAT_ID" ]; then
+  printf "chat_id для тестового повідомлення (Enter — пропустити): "; read -r TG_CHAT_ID
+fi
 if [ -n "$TG_CHAT_ID" ]; then
   echo "Тестове повідомлення в chat_id=$TG_CHAT_ID:"
   curl -s -X POST "$API/sendMessage" -d "chat_id=$TG_CHAT_ID" --data-urlencode "text=✅ Тест: бот заявок підключено" \
